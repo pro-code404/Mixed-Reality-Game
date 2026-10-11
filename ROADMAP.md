@@ -12,15 +12,22 @@ The avatar work follows the staged plan in the design brief. Current status:
 - [x] **Stage A — playable foundation.** Apartment, avatar, camera, movement, collision,
       mobile input.
 - [x] **Stage B — initial production avatar.** One male and one female base character in a
-      shared style; skin tones; a curated set of hairstyles and outfits; glasses attached
-      to the head; versioned character configuration with validation and local save.
+      shared style; skin tones; blocky hairstyles and faces; a wardrobe with an outerwear
+      layer and headwear; glasses attached to the head; versioned character configuration
+      with validation and local save.
+- [x] **Stage B+ — reference art direction.** Rebuilt to the voxel-influenced style brief
+      (oversized geometric head, sculpted block hair, small anime-style face, stylized
+      feminine silhouette, modelled garments) with the three reference-inspired looks as
+      coordinated presets, and a validation sheet (`gallery.html`) rendering them from three
+      angles under three lighting setups (§12).
 - [ ] **Stage C — customisation depth.** Tattoo textures and opacity; a larger wardrobe;
-      layered outerwear; more accessories (jewellery, bags, masks); compatibility testing
-      across body extremes. *(Tattoo opacity already exists in the schema, marked
-      unsupported.)*
+      more accessories (jewellery, bags, masks); compatibility testing across body extremes.
+      *(The outerwear layer and a headwear category now exist; tattoo opacity is in the
+      schema, marked unsupported.)*
 - [ ] **Stage D — performance and scale.** Real three-tier geometry LOD (`lod.js` seams are
       in place); a ~800–1,200-tri simplified character for crowds; measured mobile
-      frame-rate profiling. *(Not to be added before profiling shows it is useful.)*
+      frame-rate profiling. *(Not to be added before profiling shows it is useful — current
+      counts are already ~1.0–1.6k tris per character.)*
 - [ ] **Stage E — multiplayer readiness.** Networking. The compact representation and trust
       boundary in `src/avatar/net.js` are done; the transport is not.
 
@@ -45,9 +52,11 @@ The avatar work follows the staged plan in the design brief. Current status:
 
 ## Avatar
 
-- [ ] **More jackets / layers** and a hat category.
+- [x] **Outerwear + headwear categories** and the reference-look presets.
+- [ ] **More garments** and a broader hat / accessory range (Stage C).
 - [ ] **Walk-cycle variants** (idle fidget, jog) via the existing `animate()` hook.
-- [ ] **Save / load appearance** to `localStorage` (device-only, nothing uploaded).
+- [x] **Save / load appearance** to `localStorage` (device-only, nothing uploaded).
+- [ ] **Idle pose and gesture set** for the social animations in the brief (§8).
 
 ## Systems
 

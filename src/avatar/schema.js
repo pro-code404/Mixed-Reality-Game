@@ -7,7 +7,7 @@
 
 import {
   BODY_TYPES, getBodyType, defaultBodyTypeId, bodyTypeIds,
-  resolveColor, findItem, fitsBodyType,
+  resolveColor, findItem, fitsBodyType, findOutfitPreset,
 } from './catalog.js';
 
 export const SCHEMA_VERSION = 1;
@@ -95,7 +95,10 @@ export function validateConfig(input) {
   if (!resolveColor('hairColor', cfg.appearance.hair_color_id, base.appearance.hair_color_id).id) cfg.appearance.hair_color_id = base.appearance.hair_color_id;
 
   // Outfit: each garment must be authored for this body type.
-  for (const [slot, list] of [['top_id', 'top'], ['bottom_id', 'bottom'], ['footwear_id', 'footwear'], ['glasses_id', 'glasses']]) {
+  for (const [slot, list] of [
+    ['top_id', 'top'], ['outerwear_id', 'outerwear'], ['bottom_id', 'bottom'],
+    ['footwear_id', 'footwear'], ['glasses_id', 'glasses'], ['headwear_id', 'headwear'],
+  ]) {
     if (!fitsBodyType(list, cfg.outfit[slot], bt.id)) {
       fixes.push(`${slot} ${cfg.outfit[slot]} → default (not authored for ${bt.id})`);
       cfg.outfit[slot] = base.outfit[slot];
@@ -120,6 +123,24 @@ export function switchBodyType(config, nextBodyTypeId) {
   for (const m of getBodyType(nextBodyTypeId).morphs) {
     if (typeof old.body_morphs[m.key] === 'number') next.body_morphs[m.key] = clamp(old.body_morphs[m.key], m.min, m.max);
   }
+  return validateConfig(next).config;
+}
+
+/**
+ * Apply a coordinated outfit preset (§10). Presets are pure data:
+ * a body type plus appearance/outfit id sets. Everything is run back
+ * through validateConfig, so a stale preset degrades safely.
+ */
+export function applyOutfitPreset(config, presetId) {
+  const preset = findOutfitPreset(presetId);
+  if (!preset) return validateConfig(config).config;
+  let base = validateConfig(config).config;
+  if (preset.body_type && preset.body_type !== base.body_type) base = switchBodyType(base, preset.body_type);
+  const next = {
+    ...base,
+    appearance: { ...base.appearance, ...(preset.appearance || {}) },
+    outfit: { ...base.outfit, ...(preset.outfit || {}) },
+  };
   return validateConfig(next).config;
 }
 

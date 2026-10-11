@@ -9,8 +9,8 @@
 import { validateConfig, SCHEMA_VERSION } from './schema.js';
 import {
   BODY_TYPES, bodyTypeIds, getBodyType, SKIN_TONES, HAIR_COLORS, TOP_COLORS,
-  BOTTOM_COLORS, SHOE_COLORS, GLASSES_COLORS, HAIR, FACES, TOPS, BOTTOMS,
-  FOOTWEAR, GLASSES,
+  BOTTOM_COLORS, SHOE_COLORS, GLASSES_COLORS, HAIR, FACES, TOPS, OUTERWEAR,
+  BOTTOMS, FOOTWEAR, GLASSES, HEADWEAR,
 } from './catalog.js';
 
 const LOD = ['high', 'standard', 'low'];
@@ -32,12 +32,14 @@ export function encodeConfig(config) {
     idx(FACES, c.appearance.face_style_id),
     idx(TOPS, c.outfit.top_id),
     idx(TOP_COLORS, c.outfit.top_color_id),
+    idx(OUTERWEAR, c.outfit.outerwear_id),
     idx(BOTTOMS, c.outfit.bottom_id),
     idx(BOTTOM_COLORS, c.outfit.bottom_color_id),
     idx(FOOTWEAR, c.outfit.footwear_id),
     idx(SHOE_COLORS, c.outfit.shoe_color_id),
     idx(GLASSES, c.outfit.glasses_id),
     idx(GLASSES_COLORS, c.outfit.glasses_color_id),
+    idx(HEADWEAR, c.outfit.headwear_id),
     Math.max(0, LOD.indexOf(c.lod_profile)),
   ];
   return toBase64Url(JSON.stringify(arr));
@@ -77,14 +79,16 @@ export function decodeConfig(str) {
     outfit: {
       top_id: at(TOPS, g(4)),
       top_color_id: at(TOP_COLORS, g(5)),
-      bottom_id: at(BOTTOMS, g(6)),
-      bottom_color_id: at(BOTTOM_COLORS, g(7)),
-      footwear_id: at(FOOTWEAR, g(8)),
-      shoe_color_id: at(SHOE_COLORS, g(9)),
-      glasses_id: at(GLASSES, g(10)),
-      glasses_color_id: at(GLASSES_COLORS, g(11)),
+      outerwear_id: at(OUTERWEAR, g(6)),
+      bottom_id: at(BOTTOMS, g(7)),
+      bottom_color_id: at(BOTTOM_COLORS, g(8)),
+      footwear_id: at(FOOTWEAR, g(9)),
+      shoe_color_id: at(SHOE_COLORS, g(10)),
+      glasses_id: at(GLASSES, g(11)),
+      glasses_color_id: at(GLASSES_COLORS, g(12)),
+      headwear_id: at(HEADWEAR, g(13)),
     },
-    lod_profile: LOD[g(12)] || 'standard',
+    lod_profile: LOD[g(14)] || 'standard',
   };
   // validateConfig clamps morphs, drops unknown ids and swaps
   // combinations that are not authored for the body type.

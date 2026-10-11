@@ -46,10 +46,12 @@ This is the *improved* build. Compared with the original single-file prototype i
   id and a movement class (`solid`, `walkaround`, `decor`, `interactive`) — e.g.
   `radio_01`, `nightstand_01`, `door_front_01`. Objects are individually inspectable
   rather than one merged mesh.
-- **Distinct male and female base characters** in one shared art style, rebuilt
-  parametrically from continuous curved forms (capsules and spheres) with joint pivots.
-  Never a non-uniform squash of a whole rig: the body is constructed to the chosen
-  proportions so feet always meet the floor and clothing fits the body.
+- **Distinct male and female base characters** in one shared art style, built to match the
+  supplied art direction: a **Minecraft-inspired, voxel-influenced** construction with an
+  oversized geometric head, sculpted blocky hair, a small anime-style face, a stylized
+  feminine silhouette and modelled clothing. The body is built from chunky geometric blocks
+  with soft bevels to the chosen proportions, so feet always meet the floor and clothing
+  fits the body.
 - **A versioned character configuration** (`schema_version: 1`). A character is a body
   type, a set of clamped morph values, appearance ids and an equipped outfit — all
   resolved through a validated asset catalog (`src/avatar/catalog.js`). No asset paths or
@@ -60,14 +62,19 @@ This is the *improved* build. Compared with the original single-file prototype i
   parameter. Every value has a defined range and is clamped; invalid or hostile input is
   corrected rather than trusted. A tattoo-opacity control exists in the schema but is
   clearly marked *not available yet*.
-- **Curated wardrobe in the same style** — tops (tee, long-sleeve, hoodie, vest, fitted,
-  crop), bottoms (trousers, shorts, cargo, skirt), footwear (sneakers, boots), eight skin
-  tones, gender-appropriate hairstyles and faces, plus glasses attached to the head so
-  they follow the body. Each garment declares which body types it is authored for, so an
-  incompatible outfit can never be loaded.
-- **Dress-up editor** with Character selection, body-morph sliders, skin/hair/face and a
-  full outfit picker. Apply / Cancel / Reset are non-destructive, and Apply saves the look
-  to this device (`localStorage`) so it is restored next time.
+- **Curated wardrobe in the same style** — tops, an **outerwear layer** (jackets, a long
+  coat), bottoms (trousers, shorts, leggings, a pleated skirt), footwear (sneakers, boots),
+  eight skin tones, gender-appropriate blocky hairstyles and faces, **headwear** (a
+  fictional uniform cap, a hair flower), plus glasses attached to the head so they follow
+  the body. Each garment declares which body types it is authored for, so an incompatible
+  outfit can never be loaded.
+- **Coordinated outfit presets** built from the design references — a white-and-red uniform,
+  a gothic look, and a black-and-white street look — each just a set of catalog ids, so
+  presets stay data rather than code.
+- **Dress-up editor** with Character selection, body-morph sliders, skin/hair/face, an
+  outfit-preset row and a full piece picker (top, outerwear, bottom, footwear, glasses,
+  headwear). Apply / Cancel / Reset are non-destructive, and Apply saves the look to this
+  device (`localStorage`) so it is restored next time.
 - **Collision classification.** Walls and closed doors are `solid`; furniture, trees and
   benches are `walkaround` (you slide past them); flowers and small props are `decor`
   and never block you. Movement is sub-stepped with penetration push-out, giving natural
@@ -75,6 +82,27 @@ This is the *improved* build. Compared with the original single-file prototype i
 - **A front door that opens outside.** Walk to the door and choose *Go Outside* to enter
   a separate, lazily-built fictional neighborhood (buildings, fountain, park, café, shop,
   trees, flowers, benches, lamp posts). A *Return Home* control brings you back.
+
+## Character art direction
+
+The characters follow the voxel-influenced style brief: an oversized, softly-beveled
+geometric head with a broad forehead and simplified jaw; small anime-inspired eyes with
+lashes and brows on the front face; hair sculpted from chunky, layered geometric sections
+(not a smooth helmet); a stylized feminine silhouette built from tapered blocks with a
+defined waist and widened hips; and clothing modelled as separate garments with sleeves,
+collars, belts, cuffs, hems and trims.
+
+### Validation sheet
+
+Because this is an art-direction judgement, there is a separate sheet that renders the three
+reference-inspired looks (white-and-red uniform, gothic, black-and-white street) from the
+**front, three-quarter and side**, switchable between **neutral studio, warm interior and
+night** lighting:
+
+- Local: open `gallery.html` through the same local web server.
+- The sheet has a *Save PNG* button so a frame can be shared for review.
+
+This page is a review aid, not part of the playable apartment.
 
 ## What it deliberately is not
 
@@ -86,10 +114,12 @@ This is the *improved* build. Compared with the original single-file prototype i
 
 ```
 index.html            entry point (import map + HUD markup)
+gallery.html          character style validation sheet (§12) — review aid, not the game
 styles.css            UI + HUD styling
 src/
   config.js           scale, rooms, avatar tunables — the single source of truth
   main.js             orchestrator: renderer, loop, scene transitions, wiring
+  gallery.js          renders the three reference looks for review
   core/
     registry.js       World entity registry + movement classes (KIND)
     collision.js      circle-vs-box/circle resolution + sub-stepped stepMove
@@ -128,19 +158,23 @@ means adding an entity with an `interact: { action, label, at, radius }` and a m
 ## Avatar system — what's built and what is not
 
 The avatar work follows an incremental plan (Stage A → E). This build completes **Stage A**
-(playable apartment, avatar, camera, movement, collision, mobile input) and **Stage B**
-(one male and one female base character in a shared style, skin tones, a curated set of
-hairstyles and outfits, a working wardrobe with accessories, and the versioned character
-configuration).
+(playable apartment, avatar, camera, movement, collision, mobile input) and **Stage B**, now
+rebuilt to the voxel-influenced art direction: one male and one female base character in a
+shared style, eight skin tones, blocky hairstyles and faces, a wardrobe with an outerwear
+layer and headwear, coordinated reference-look presets, and the versioned character
+configuration. The style is reviewed on `gallery.html` (§12), not just described.
 
 Implemented and machine-verified:
 
-- Two base body types with distinct silhouettes, faces and hair.
+- Two base body types with distinct silhouettes, faces and blocky hair, in one shared
+  voxel-influenced style.
+- The three reference-inspired looks from the brief (uniform, gothic, street) as coordinated
+  presets, using real outerwear and headwear layers.
 - Continuous morph customisation with defined ranges and clamping.
-- Skin-tone, hair, face, top, bottom, footwear and glasses selection.
+- Skin-tone, hair, face, top, outerwear, bottom, footwear, glasses and headwear selection.
 - Validation that rejects wrong-gender hair and body-incompatible garments.
 - Local save/restore of the whole configuration.
-- Attachment of accessories to skeleton groups (glasses follow the head).
+- Attachment of accessories to skeleton groups (glasses and headwear follow the head).
 - A compact, validated multiplayer representation (`net.js`) — **format only**:
   encoding/decoding and the trust boundary are done, networking is not.
 
@@ -148,30 +182,33 @@ Deliberately **not** done yet (kept behind explicit seams, per the brief's "do n
 the entire platform first"):
 
 - **Stage C — tattoos and a larger wardrobe.** Tattoo opacity is in the schema but marked
-  unsupported; there is no tattoo texture pipeline yet.
-- **Stage D — runtime LOD and a low-poly distant character.** `lod.js` names the tiers and
-  `setDetail('low')` hides accessory detail, but geometry is not yet swapped by distance,
-  and there is no separate ~800–1,200-tri "simplified" character.
+  *not available yet*; there are no tattoo textures. The wardrobe holds the three reference
+  looks plus a few basics, not a large catalogue.
+- **Stage D — geometry LOD.** The LOD seam and a detail toggle exist, but distance-based mesh
+  swapping and the ~500-tri distant body / ~800–1,200-tri simplified character are **not**
+  implemented. Current counts are already low, so this is not yet justified by profiling.
 - **Stage E — networking.** No connection is opened anywhere in the game.
 
 ## Measured geometry
 
-Measured from the shipped `src/avatar/avatar.js` under Node (segment counts, not estimates),
-compared against the brief's §7 initial targets:
+Measured from the shipped `src/avatar/avatar.js` under Node, counting real triangles:
 
-| Character | Body + clothing | Hair | Accessories |
-| --- | ---: | ---: | ---: |
-| Female base, most detailed hair | 3,804 | 1,088 (voluminous curls) | 0 |
-| Male base, default hair | 3,764 | 540 (wavy centre-part) | 0 |
+| Character | Body + clothing | Hair | Accessories | Total |
+| --- | ---: | ---: | ---: | ---: |
+| Female — white & red uniform | 1,164 | 96 | 100 | **1,360** |
+| Female — gothic | 968 | 96 | 544 | **1,608** |
+| Female — black & white street | 1,200 | 108 | 72 | **1,380** |
+| Female default | 1,072 | 96 | 76 | **1,244** |
+| Male default | 964 | 72 | 0 | **1,036** |
 
-- §7 **base body** target ~2,500–4,000 tris → **met** (3,764–3,804).
-- §7 **hair + accessories** target ~1,500 extra → **met** (540–1,088; glasses add ~380).
-- Full character totals (clothing + hair + glasses) land at roughly **4,300–5,300 tris**.
+- §7 **base body** budget (~2,500–4,000 tris) is a ceiling, not a target to hit. The blocky
+  style lands well under it (≈1,000–1,200 for body + clothing); silhouette is prioritised
+  over count, and counts are only reported as measured.
+- Every look above is between roughly **1,036 and 1,608 tris** including hair and accessories.
 - Textures: none. Everything is flat-colour procedural geometry, so there are no texture
-  atlases to report and no per-character texture cost. Normal maps and tattoo textures are
-  Stage C.
-- Not yet met: the ~500-tri distant-body target and the ~800–1,200-tri simplified
-  character — these belong to Stage D and are honestly marked as not implemented.
+  atlases and no per-character texture cost.
+- Not yet met: the ~500-tri distant-body and ~800–1,200-tri simplified-character targets —
+  Stage D, honestly marked as not implemented.
 
 ## Honesty notes (kept from the original brief)
 

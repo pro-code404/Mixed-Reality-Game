@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Character Style Validation — Mixed Reality Game</title>
+  <meta name="description" content="Validation sheet for the voxel-influenced character style brief. Not part of the playable build." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237cc4ff'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23061018'/%3E%3C/svg%3E" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #0b0e14; color: #e7eefb;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    #sheet { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    .bar { position: fixed; top: 0; left: 0; right: 0; display: flex; flex-wrap: wrap; gap: 8px;
+      align-items: center; padding: 10px 14px; background: linear-gradient(#0b0e14ee, #0b0e1400);
+      pointer-events: none; }
+    .bar > * { pointer-events: auto; }
+    .bar .title { font-weight: 700; letter-spacing: .04em; margin-right: 10px; }
+    .bar .title small { display: block; font-weight: 400; opacity: .6; letter-spacing: 0; font-size: 11px; }
+    button { font: inherit; font-size: 13px; padding: 7px 12px; border-radius: 9px; cursor: pointer;
+      color: #dbe6f7; background: #161b25; border: 1px solid #2b3342; }
+    button:hover { border-color: #46536b; }
+    button.active { background: #1d3a5c; border-color: #3f7fc4; color: #fff; }
+    .sep { width: 1px; height: 22px; background: #2b3342; margin: 0 4px; }
+    .hint { position: fixed; bottom: 10px; left: 14px; font-size: 12px; opacity: .55; }
+  </style>
+</head>
+<body>
+  <canvas id="sheet"></canvas>
+  <div class="bar">
+    <div class="title">CHARACTER STYLE VALIDATION
+      <small>voxel-influenced reference looks · drag to orbit · scroll to zoom</small>
+    </div>
+    <span class="sep"></span>
+    <button id="litNeutral" class="active">Neutral studio</button>
+    <button id="litWarm">Warm interior</button>
+    <button id="litNight">Night</button>
+    <span class="sep"></span>
+    <button id="spinToggle">Spin</button>
+    <button id="saveBtn">Save PNG</button>
+  </div>
+  <div class="hint">Validation sheet for the character art direction brief — a separate page from the playable apartment.</div>
+  <script type="module" src="src/gallery.js"></script>
+</body>
+</html>

@@ -7,9 +7,9 @@
 
 import {
   BODY_TYPES, SKIN_TONES, HAIR_COLORS, TOP_COLORS, BOTTOM_COLORS,
-  SHOE_COLORS, GLASSES_COLORS, itemsFor, getBodyType,
+  SHOE_COLORS, GLASSES_COLORS, itemsFor, getBodyType, OUTFITS,
 } from '../avatar/catalog.js';
-import { validateConfig, switchBodyType, defaultConfig } from '../avatar/schema.js';
+import { validateConfig, switchBodyType, defaultConfig, applyOutfitPreset } from '../avatar/schema.js';
 
 const hex = (n) => '#' + n.toString(16).padStart(6, '0');
 
@@ -141,6 +141,16 @@ export class DressUp {
       this._commit();
     });
 
+    // ---------- Outfit presets (§10) ----------
+    const presets = OUTFITS.filter((p) => !p.body_type || p.body_type === cfg.body_type);
+    if (presets.length) {
+      this._options('Outfit preset', [{ id: '__none', name: 'Keep current' }, ...presets], '__none', (id) => {
+        if (id === '__none') return;
+        this.draft = applyOutfitPreset(this.draft, id);
+        this._commit();
+      }, 'Coordinated looks from the design references.');
+    }
+
     // ---------- Body shape (morphs) ----------
     const groupLabel = { proportions: 'Proportions', torso: 'Torso', limbs: 'Limbs', surface: 'Surface' };
     const groups = [];
@@ -164,6 +174,7 @@ export class DressUp {
     // ---------- Outfit ----------
     this._options('Top', itemsFor('top', cfg.body_type), cfg.outfit.top_id, (id) => this._setOut('top_id', id));
     this._swatches('Top colour', TOP_COLORS, cfg.outfit.top_color_id, (id) => this._setOut('top_color_id', id));
+    this._options('Outerwear', itemsFor('outerwear', cfg.body_type), cfg.outfit.outerwear_id, (id) => this._setOut('outerwear_id', id));
     this._options('Bottom', itemsFor('bottom', cfg.body_type), cfg.outfit.bottom_id, (id) => this._setOut('bottom_id', id));
     this._swatches('Bottom colour', BOTTOM_COLORS, cfg.outfit.bottom_color_id, (id) => this._setOut('bottom_color_id', id));
     this._options('Footwear', itemsFor('footwear', cfg.body_type), cfg.outfit.footwear_id, (id) => this._setOut('footwear_id', id));
@@ -172,5 +183,6 @@ export class DressUp {
     // ---------- Accessories ----------
     this._options('Glasses', itemsFor('glasses', cfg.body_type), cfg.outfit.glasses_id, (id) => this._setOut('glasses_id', id));
     this._swatches('Glasses colour', GLASSES_COLORS, cfg.outfit.glasses_color_id, (id) => this._setOut('glasses_color_id', id));
+    this._options('Headwear', itemsFor('headwear', cfg.body_type), cfg.outfit.headwear_id, (id) => this._setOut('headwear_id', id));
   }
 }
