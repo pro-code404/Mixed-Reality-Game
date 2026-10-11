@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mixed Reality Game — Apartment Prototype</title>
+  <meta name="description" content="A stylized, fully simulated 3D lifestyle prototype. No real location, no network, no accounts." />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <!-- Intro / title overlay -->
+    <div id="intro" class="overlay">
+      <div class="panel">
+        <div class="brand">CLOUD HUE</div>
+        <h1>A Life, Authored.</h1>
+        <p class="tagline">
+          A stylized 3D lifestyle prototype. Your apartment breathes with the day.
+          Everything here is <em>simulated fiction</em> — no real location, no GPS, no network.
+        </p>
+        <ul class="bullets">
+          <li><strong>Move:</strong> click the floor to walk there, or use WASD / Arrows</li>
+          <li><strong>Look:</strong> drag the screen to rotate the camera</li>
+          <li><strong>Interact:</strong> near an object, press <kbd>E</kbd> or tap <span class="btn-chip">INTERACT</span></li>
+          <li><strong>Time:</strong> drag the clock to move through day &amp; night</li>
+          <li><strong>Avatar:</strong> open <strong>Dress Up</strong> to change body, hair and clothes</li>
+          <li><strong>Leave home:</strong> walk to the front door and choose <strong>Go Outside</strong></li>
+        </ul>
+        <button id="startBtn" class="primary">Enter the Apartment</button>
+        <p class="fine">Improvement build · no data leaves your device</p>
+      </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud" class="hidden">
+      <div class="hud-top">
+        <div class="time-card">
+          <div class="time-label">SIMULATED TIME</div>
+          <div id="timeReadout" class="time-value">--:--</div>
+          <div id="timePhase" class="time-phase">—</div>
+        </div>
+        <div class="place-card">
+          <div class="time-label">LOCATION</div>
+          <div id="placeName" class="place-name">Studio Apartment</div>
+          <div class="place-note">fictional · not a real place</div>
+        </div>
+      </div>
+
+      <!-- Clock slider -->
+      <div class="clock-dock">
+        <span class="clock-icon">🕒</span>
+        <input id="clockSlider" type="range" min="0" max="24" step="0.05" value="8" />
+        <button id="clockAuto" class="ghost-btn active" title="Follow device clock">AUTO</button>
+      </div>
+
+      <!-- Interaction prompt -->
+      <div id="interactPrompt" class="interact hidden">
+        <kbd>E</kbd> <span id="interactLabel">Interact</span>
+      </div>
+
+      <!-- Mobile interact button -->
+      <button id="interactBtn" class="interact-btn hidden">INTERACT</button>
+
+      <!-- Mobile joystick -->
+      <div id="joystick" class="joystick">
+        <div id="joyKnob" class="joy-knob"></div>
+      </div>
+
+      <!-- Bottom controls -->
+      <div class="hud-bottom">
+        <button id="dressupBtn" class="ghost-btn" title="Customize avatar">👤 Dress Up</button>
+        <button id="homeBtn" class="ghost-btn hidden" title="Return to the apartment">🏠 Return Home</button>
+        <button id="resetBtn" class="ghost-btn" title="Reset apartment state">↺ Reset</button>
+        <button id="muteBtn" class="ghost-btn" title="Toggle sound">🔊 Sound</button>
+        <button id="motionBtn" class="ghost-btn" title="Toggle reduced motion">✨ Motion</button>
+      </div>
+    </div>
+
+    <!-- Avatar dressing overlay -->
+    <div id="dressupOverlay" class="overlay hidden">
+      <div class="panel dressup-panel">
+        <div class="panel-head">
+          <div>
+            <div class="brand">AVATAR</div>
+            <h2>Dress Up</h2>
+          </div>
+          <button id="dressupClose" class="icon-btn">✕</button>
+        </div>
+        <div id="dressupBody" class="dressup-body"></div>
+        <div class="dressup-actions">
+          <button id="dressupReset" class="ghost-btn">Reset</button>
+          <button id="dressupCancel" class="ghost-btn">Cancel</button>
+          <button id="dressupApply" class="primary">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene transition fade -->
+    <div id="fade" class="fade hidden"></div>
+
+    <!-- Toast notifications -->
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
