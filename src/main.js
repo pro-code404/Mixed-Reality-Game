@@ -376,6 +376,11 @@ $('startBtn').addEventListener('click', () => {
   $('intro').style.display = 'none';
   hud.show();
   hud.setPlace('Studio Apartment');
+  if (clock.auto) {
+    const now = new Date();
+    const slider = $('clockSlider');
+    if (slider) slider.value = String(now.getHours() + now.getMinutes() / 60);
+  }
   if (input.isTouch()) hud.showTouch(true);
   toast('Welcome home. Walk to the radio on the coffee table.', 4200);
   audio.blip(660);
@@ -412,10 +417,15 @@ function animate() {
 
   if (mode === 'room') {
     avatar.tick();
-    updateMovement(dt);
-    updateCamera(dt);
-    const near = findNearby();
-    hud.setInteract(near ? near.interact.label : null);
+    if (started) {
+      updateMovement(dt);
+      updateCamera(dt);
+      const near = findNearby();
+      hud.setInteract(near ? near.interact.label : null);
+    } else {
+      updateCamera(dt);
+      hud.setInteract(null);
+    }
   } else if (mode === 'dressup') {
     // Turntable preview against the room, camera framed on the avatar.
     avatar.tick();

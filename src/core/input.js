@@ -30,6 +30,7 @@ export class Input {
     window.addEventListener('keydown', (e) => {
       this.keys[e.code] = true;
       if (e.code === 'KeyE' || e.code === 'Space') {
+        if (e.code === 'Space') e.preventDefault();
         if (this.onInteract) this.onInteract();
       }
     });
@@ -61,6 +62,50 @@ export class Input {
       }
       this._drag = false;
     });
+
+    this._bindJoystick();
+  }
+
+  /** Wire the on-screen joystick (touch / click) into the same move vector. */
+  _bindJoystick() {
+    const joy = document.getElementById('joystick');
+    const knob = document.getElementById('joyKnob');
+    if (!joy || !knob) return;
+
+    const apply = (e) => {
+      const rect = joy.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const max = rect.width / 2 - 14;
+      let dx = e.clientX - cx;
+      let dy = e.clientY - cy;
+      const len = Math.hypot(dx, dy);
+      if (len > max) { dx = (dx / len) * max; dy = (dy / len) * max; }
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      this.joystick.dx = dx / max;
+      this.joystick.dy = dy / max;
+    };
+
+    const start = (e) => {
+      if (!this.enabled) return;
+      this.joystick.active = true;
+      joy.setPointerCapture && joy.setPointerCapture(e.pointerId);
+      apply(e);
+      e.preventDefault();
+    };
+    const move = (e) => { if (this.joystick.active) apply(e); };
+    const end = () => {
+      this.joystick.active = false;
+      this.joystick.dx = 0;
+      this.joystick.dy = 0;
+      knob.style.transform = 'translate(0px, 0px)';
+    };
+
+    joy.addEventListener('pointerdown', start);
+    joy.addEventListener('pointermove', move);
+    joy.addEventListener('pointerup', end);
+    joy.addEventListener('pointercancel', end);
+    joy.addEventListener('pointerleave', end);
   }
 
   /** Movement intent in local camera space (x = strafe, z = forward-). */
