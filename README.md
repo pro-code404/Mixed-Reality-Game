@@ -46,11 +46,28 @@ This is the *improved* build. Compared with the original single-file prototype i
   id and a movement class (`solid`, `walkaround`, `decor`, `interactive`) — e.g.
   `radio_01`, `nightstand_01`, `door_front_01`. Objects are individually inspectable
   rather than one merged mesh.
-- **A rounded, human-like avatar** built from continuous curved forms (capsules and
-  spheres) with joint pivots, instead of a box figure.
-- **Body-shape presets** — Slim / Fit / Solid — plus stature and a bounded fine-tune
-  slider. The body is rebuilt parametrically, so feet always meet the floor and
-  clothing scales with the body (never a non-uniform squash of the whole rig).
+- **Distinct male and female base characters** in one shared art style, rebuilt
+  parametrically from continuous curved forms (capsules and spheres) with joint pivots.
+  Never a non-uniform squash of a whole rig: the body is constructed to the chosen
+  proportions so feet always meet the floor and clothing fits the body.
+- **A versioned character configuration** (`schema_version: 1`). A character is a body
+  type, a set of clamped morph values, appearance ids and an equipped outfit — all
+  resolved through a validated asset catalog (`src/avatar/catalog.js`). No asset paths or
+  material details are ever stored as player data, so assets can be added or swapped
+  without touching saved characters.
+- **Continuous body customisation** — shoulder width, torso proportions and length, chest
+  bulk, waist, hips, thigh volume, bust, arm thickness, height and a muscle-detail
+  parameter. Every value has a defined range and is clamped; invalid or hostile input is
+  corrected rather than trusted. A tattoo-opacity control exists in the schema but is
+  clearly marked *not available yet*.
+- **Curated wardrobe in the same style** — tops (tee, long-sleeve, hoodie, vest, fitted,
+  crop), bottoms (trousers, shorts, cargo, skirt), footwear (sneakers, boots), eight skin
+  tones, gender-appropriate hairstyles and faces, plus glasses attached to the head so
+  they follow the body. Each garment declares which body types it is authored for, so an
+  incompatible outfit can never be loaded.
+- **Dress-up editor** with Character selection, body-morph sliders, skin/hair/face and a
+  full outfit picker. Apply / Cancel / Reset are non-destructive, and Apply saves the look
+  to this device (`localStorage`) so it is restored next time.
 - **Collision classification.** Walls and closed doors are `solid`; furniture, trees and
   benches are `walkaround` (you slide past them); flowers and small props are `decor`
   and never block you. Movement is sub-stepped with penetration push-out, giving natural
@@ -58,8 +75,6 @@ This is the *improved* build. Compared with the original single-file prototype i
 - **A front door that opens outside.** Walk to the door and choose *Go Outside* to enter
   a separate, lazily-built fictional neighborhood (buildings, fountain, park, café, shop,
   trees, flowers, benches, lamp posts). A *Return Home* control brings you back.
-- **Dress-up editor** for skin, hair style/color, eyes, brows, tops, bottoms and shoes,
-  with non-destructive Apply / Cancel / Reset.
 
 ## What it deliberately is not
 
@@ -83,8 +98,13 @@ src/
     input.js          keyboard, drag-look, click-to-move, joystick
     rng.js            small deterministic RNG for scenery
   avatar/
-    presets.js        appearance data + body-shape presets
-    avatar.js         parametric rounded avatar
+    catalog.js        validated asset catalog (body types, morph ranges, hair, faces,
+                      clothing, colours) — the only source of player-facing choices
+    schema.js         versioned config: defaults, validate/clamp, migrate, local save
+    characters.js     body definition: proportions + morph rules (pure maths, no meshes)
+    avatar.js         the renderer: builds body, clothing, hair, face, accessories
+    lod.js            level-of-detail seam (three tiers; runtime LOD is Stage D)
+    net.js            compact, validated multiplayer representation (Stage E seam)
   world/
     materials.js      shared materials
     props.js          tagged scenery factories (trees, flowers, benches, lamps, buildings)
@@ -104,6 +124,54 @@ means adding a builder under `src/world/` that registers tagged entities and ret
 `{ group, lights, spawn, bounds, meta }`, mirroring `apartment.js`. Adding an interaction
 means adding an entity with an `interact: { action, label, at, radius }` and a matching
 `case` in `main.js`.
+
+## Avatar system — what's built and what is not
+
+The avatar work follows an incremental plan (Stage A → E). This build completes **Stage A**
+(playable apartment, avatar, camera, movement, collision, mobile input) and **Stage B**
+(one male and one female base character in a shared style, skin tones, a curated set of
+hairstyles and outfits, a working wardrobe with accessories, and the versioned character
+configuration).
+
+Implemented and machine-verified:
+
+- Two base body types with distinct silhouettes, faces and hair.
+- Continuous morph customisation with defined ranges and clamping.
+- Skin-tone, hair, face, top, bottom, footwear and glasses selection.
+- Validation that rejects wrong-gender hair and body-incompatible garments.
+- Local save/restore of the whole configuration.
+- Attachment of accessories to skeleton groups (glasses follow the head).
+- A compact, validated multiplayer representation (`net.js`) — **format only**:
+  encoding/decoding and the trust boundary are done, networking is not.
+
+Deliberately **not** done yet (kept behind explicit seams, per the brief's "do not build
+the entire platform first"):
+
+- **Stage C — tattoos and a larger wardrobe.** Tattoo opacity is in the schema but marked
+  unsupported; there is no tattoo texture pipeline yet.
+- **Stage D — runtime LOD and a low-poly distant character.** `lod.js` names the tiers and
+  `setDetail('low')` hides accessory detail, but geometry is not yet swapped by distance,
+  and there is no separate ~800–1,200-tri "simplified" character.
+- **Stage E — networking.** No connection is opened anywhere in the game.
+
+## Measured geometry
+
+Measured from the shipped `src/avatar/avatar.js` under Node (segment counts, not estimates),
+compared against the brief's §7 initial targets:
+
+| Character | Body + clothing | Hair | Accessories |
+| --- | ---: | ---: | ---: |
+| Female base, most detailed hair | 3,804 | 1,088 (voluminous curls) | 0 |
+| Male base, default hair | 3,764 | 540 (wavy centre-part) | 0 |
+
+- §7 **base body** target ~2,500–4,000 tris → **met** (3,764–3,804).
+- §7 **hair + accessories** target ~1,500 extra → **met** (540–1,088; glasses add ~380).
+- Full character totals (clothing + hair + glasses) land at roughly **4,300–5,300 tris**.
+- Textures: none. Everything is flat-colour procedural geometry, so there are no texture
+  atlases to report and no per-character texture cost. Normal maps and tattoo textures are
+  Stage C.
+- Not yet met: the ~500-tri distant-body target and the ~800–1,200-tri simplified
+  character — these belong to Stage D and are honestly marked as not implemented.
 
 ## Honesty notes (kept from the original brief)
 

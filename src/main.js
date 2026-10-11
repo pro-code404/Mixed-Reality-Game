@@ -13,7 +13,8 @@ import { WorldClock, skyState, phaseName } from './core/clock.js';
 import { AudioBus } from './core/audio.js';
 import { Input } from './core/input.js';
 import { Avatar } from './avatar/avatar.js';
-import { DEFAULT_APPEARANCE } from './avatar/presets.js';
+import { defaultConfig, loadLocal, saveLocal } from './avatar/schema.js';
+import { levelForProfile } from './avatar/lod.js';
 import { buildApartment } from './world/apartment.js';
 import { buildOutside } from './world/outside.js';
 import { Hud } from './ui/hud.js';
@@ -49,8 +50,9 @@ const input = new Input(canvas);
 const hud = new Hud();
 const toast = createToast($('toast'));
 
-let appearance = { ...DEFAULT_APPEARANCE };
-const avatar = new Avatar(appearance);
+let character = loadLocal() || defaultConfig();
+const avatar = new Avatar(character);
+avatar.setDetail(levelForProfile(character.lod_profile));
 scene.add(avatar.group);
 avatar.group.position.set(apartment.spawn.x, 0, apartment.spawn.z);
 avatar.tick();
@@ -63,10 +65,10 @@ let started = false;
 const flags = { radioOn: false, lampOn: false, plantTended: false, windowOpen: true };
 
 const dressup = new DressUp({
-  getAppearance: () => appearance,
-  onPreview: (a) => avatar.setAppearance(a),
-  onApply: (a) => { appearance = a; avatar.setAppearance(a); toast('Outfit saved.'); },
-  onCancel: () => avatar.setAppearance(appearance),
+  getConfig: () => avatar.getConfig(),
+  onPreview: (cfg) => avatar.setConfig(cfg),
+  onApply: (cfg) => { character = cfg; avatar.setConfig(cfg); saveLocal(cfg); toast('Look saved on this device.'); },
+  onCancel: () => avatar.setConfig(character),
 });
 
 // ---------- Scene helpers ----------

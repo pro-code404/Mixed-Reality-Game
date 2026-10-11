@@ -1,8 +1,28 @@
 # Roadmap
 
 The build is intentionally structured so each item below is an additive change behind an
-existing seam — a new file under `src/world/`, a new `case` in `main.js`, or a new entry
-in `config.js`. Nothing here is implemented yet unless stated.
+existing seam — a new file under `src/world/`, a new `case` in `main.js`, a new entry in
+`src/avatar/catalog.js`, or a new field in the character schema. Items are marked done only
+once they have actually been run and verified.
+
+## Avatar system (staged)
+
+The avatar work follows the staged plan in the design brief. Current status:
+
+- [x] **Stage A — playable foundation.** Apartment, avatar, camera, movement, collision,
+      mobile input.
+- [x] **Stage B — initial production avatar.** One male and one female base character in a
+      shared style; skin tones; a curated set of hairstyles and outfits; glasses attached
+      to the head; versioned character configuration with validation and local save.
+- [ ] **Stage C — customisation depth.** Tattoo textures and opacity; a larger wardrobe;
+      layered outerwear; more accessories (jewellery, bags, masks); compatibility testing
+      across body extremes. *(Tattoo opacity already exists in the schema, marked
+      unsupported.)*
+- [ ] **Stage D — performance and scale.** Real three-tier geometry LOD (`lod.js` seams are
+      in place); a ~800–1,200-tri simplified character for crowds; measured mobile
+      frame-rate profiling. *(Not to be added before profiling shows it is useful.)*
+- [ ] **Stage E — multiplayer readiness.** Networking. The compact representation and trust
+      boundary in `src/avatar/net.js` are done; the transport is not.
 
 ## Near term (polish the current slice)
 
