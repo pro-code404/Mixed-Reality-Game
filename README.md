@@ -1,6 +1,6 @@
-# Mixed Reality Game
+# Mixed Reality
 
-A stylized, **fully simulated** 3D lifestyle prototype — "Cloud Hue". You live in a
+A stylized, **fully simulated** 3D lifestyle prototype from Cloud Hue. You live in a
 compact studio apartment that breathes with the time of day: sunrise warms the walls,
 the window view shifts, lamps glow at night, and the front door opens onto a fictional
 neighborhood you can walk around.
