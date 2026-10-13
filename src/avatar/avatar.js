@@ -250,8 +250,8 @@ export class Avatar {
     const isF = P.gender === 'female';
     const H = P.H;
     const headMorph = clamp(num(m.head_scale, 1), 0.9, 1.15);
-    const hs = H * (isF ? 0.232 : 0.226) * headMorph; // head edge (oversized cube)
-    const headD = hs * 0.98;
+    const hs = H * (isF ? 0.198 : 0.226) * headMorph; // head edge (refined, less oversized)
+    const headD = hs * 0.94;
     const neckH = H * 0.036;
     const headY = H - hs * 0.52 - H * 0.014;
     const neckTop = headY - hs * 0.5;
@@ -553,8 +553,8 @@ export class Avatar {
     const H = this._attach.head;
 
     const narrow = face === 'sharp' || face === 'angular';
-    const headW = hs * (narrow ? 0.95 : 1.0);
-    const headH = hs * 1.02;
+    const headW = hs * (narrow ? 0.88 : 0.92);
+    const headH = hs * 0.92;
     const zF = headD * 0.5;
 
     // Cranium + a distinctly narrower jaw for a finished head shape.
@@ -566,7 +566,7 @@ export class Avatar {
     const eyeX = hs * 0.205;
     const eyeW = hs * (face === 'bright' ? 0.2 : 0.185);
     const eyeH = hs * (narrow ? 0.15 : 0.165);
-    m.iris.color.setHex(isF ? 0x4a6a92 : 0x3d5a80);
+    m.iris.color.setHex(isF ? 0x5fa3e6 : 0x3d5a80);
 
     for (const s of [-1, 1]) {
       const ex = s * eyeX;
@@ -589,14 +589,14 @@ export class Avatar {
     // Small designed nose (a gentle projection, not a big block).
     this._box(H, hs * 0.055, hs * 0.06, hs * 0.055, m.skin, 0, eyeY - hs * 0.165, zF + hs * 0.012);
     // Mouth: a subtle pleasant smile (centre bar + upturned corners).
-    this._box(H, hs * 0.12, hs * 0.026, 0.012, m.mouth, 0, eyeY - hs * 0.29, zF + 0.004);
+    this._box(H, hs * 0.1, hs * 0.022, 0.012, m.mouth, 0, eyeY - hs * 0.28, zF + 0.004);
     for (const s of [-1, 1]) {
-      const corner = this._box(H, hs * 0.03, hs * 0.026, 0.012, m.mouth, s * hs * 0.072, eyeY - hs * 0.278, zF + 0.004);
-      corner.rotation.z = s * 0.55;
+      const corner = this._box(H, hs * 0.026, hs * 0.022, 0.012, m.mouth, s * hs * 0.062, eyeY - hs * 0.27, zF + 0.004);
+      corner.rotation.z = s * 0.5;
     }
 
     // Ears.
-    for (const s of [-1, 1]) this._box(H, hs * 0.06, hs * 0.18, hs * 0.14, m.skin, s * (headW * 0.5 + hs * 0.015), eyeY, -hs * 0.03);
+    for (const s of [-1, 1]) this._box(H, hs * 0.048, hs * 0.14, hs * 0.11, m.skin, s * (headW * 0.5 + hs * 0.01), eyeY, -hs * 0.03);
 
     this._drawHair(L);
   }
@@ -623,10 +623,10 @@ export class Avatar {
       this._hairBox(H, hs * w, hs * h, hs * d, hs * x, hs * y, hs * z, mat, rx, ry, rz);
 
     // Crown — always present and always covering the top of the head.
-    const crown = (w = 1.16, h = 0.36, d = 1.12) => {
-      P(w, h, d, 0, 0.41, -0.01, A);
-      P(w * 0.9, h * 0.46, d * 0.9, 0, 0.41 + h * 0.585, -0.05, B);
-      P(w * 0.34, h * 0.14, d * 0.74, 0, 0.41 + h * 0.5, -0.02, C);
+    const crown = (w = 1.08, h = 0.3, d = 1.06) => {
+      P(w, h, d, 0, 0.38, -0.01, A);
+      P(w * 0.88, h * 0.4, d * 0.88, 0, 0.38 + h * 0.52, -0.04, B);
+      P(w * 0.32, h * 0.12, d * 0.72, 0, 0.38 + h * 0.5, -0.02, C);
     };
     const back = (h, y, w = 1.08, d = 0.3, z = -0.48, mat = B) => P(w, h, d, 0, y, z, mat);
     const sides = (h, y, w = 0.16, x = 0.53, d = 0.96, mat = A) => { P(w, h, d, -x, y, -0.01, mat); P(w, h, d, x, y, -0.01, mat); };
@@ -637,45 +637,43 @@ export class Avatar {
 
     switch (style) {
       case 'volBob': {
-        crown(1.2, 0.42, 1.16);
-        // Rounded bob crown with more lift at the front.
-        P(1.16, 0.26, 1.06, 0, 0.48, 0.06, C);
-        back(1.2, -0.18, 1.14, 0.36, -0.46);
-        sides(1.2, -0.26, 0.22, 0.56, 1.04);
-        // Curved under-layer at jaw to give a softer, wig-like fall.
-        P(1.16, 0.52, 0.9, 0, -0.46, -0.14, B);
-        locks(0.78, -0.32, 0.2, 0.49, 0.24, 0.32, A);
-        fringe(0.66, 0.22, -0.04, 0.28, 0.18, A);
-        fringe(0.38, 0.26, 0.3, 0.24, 0.28, B);
+        crown(1.1, 0.34, 1.08);
+        P(1.06, 0.22, 1.0, 0, 0.46, 0.06, C);
+        back(1.1, -0.16, 1.08, 0.32, -0.42);
+        sides(1.08, -0.22, 0.2, 0.52, 0.98);
+        P(1.08, 0.46, 0.86, 0, -0.4, -0.12, B);
+        locks(0.72, -0.28, 0.18, 0.46, 0.22, 0.28, A);
+        fringe(0.62, 0.2, -0.04, 0.26, 0.16, A);
+        fringe(0.36, 0.24, 0.28, 0.22, 0.26, B);
         break;
       }
       case 'longAsh': {
-        crown(1.18, 0.38, 1.14);
-        P(1.14, 0.28, 1.08, 0, 0.5, 0.04, C);
-        back(1.8, -0.6, 1.14, 0.34, -0.48);
-        P(1.04, 1.18, 0.3, 0, -1.08, -0.44, B); // long rear panel
-        sides(1.32, -0.4, 0.22, 0.56, 1.04);
-        locks(1.56, -0.78, 0.26, 0.47, 0.26, 0.28);
-        P(0.68, 0.42, 0.32, 0, -1.06, -0.48, A);   // lower back lock
-        P(0.9, 0.32, 0.26, 0, -0.86, -0.5, B);     // curved mid-back
-        fringe(0.54, 0.3, -0.04, 0.3, 0.16, C);
-        fringe(0.38, 0.4, 0.3, 0.22, 0.34, B);
+        crown(1.12, 0.34, 1.08);
+        P(1.08, 0.24, 1.02, 0, 0.48, 0.04, C);
+        back(1.56, -0.52, 1.08, 0.32, -0.44);
+        P(0.96, 1.0, 0.28, 0, -0.94, -0.4, B);
+        sides(1.18, -0.34, 0.2, 0.52, 0.98);
+        locks(1.38, -0.68, 0.24, 0.44, 0.24, 0.26);
+        P(0.62, 0.36, 0.3, 0, -0.92, -0.44, A);
+        P(0.84, 0.28, 0.24, 0, -0.76, -0.46, B);
+        fringe(0.5, 0.24, -0.04, 0.28, 0.14, C);
+        fringe(0.36, 0.32, 0.28, 0.2, 0.3, B);
         break;
       }
       case 'twinTails': {
-        crown(1.16, 0.4, 1.12);
-        P(1.12, 0.24, 1.06, 0, 0.52, 0.04, C);
-        back(0.92, -0.08, 1.08, 0.32, -0.46);
-        sides(0.88, -0.18, 0.18, 0.54);
+        crown(1.1, 0.36, 1.08);
+        P(1.06, 0.22, 1.02, 0, 0.48, 0.04, C);
+        back(0.88, -0.08, 1.04, 0.3, -0.44);
+        sides(0.84, -0.16, 0.17, 0.52);
         for (const s of [-1, 1]) {
-          P(0.32, 0.8, 0.34, s * 0.68, -0.26, -0.26, A);
-          P(0.28, 0.46, 0.3, s * 0.68, -0.66, -0.22, B);
-          P(0.24, 0.36, 0.26, s * 0.68, -0.9, -0.2, B);
-          this._markDetail(this._part(H, torus(hs * 0.12, hs * 0.035, 5, 8), m.accent, hs * 0.56, hs * 0.08, -hs * 0.22));
+          P(0.3, 0.72, 0.32, s * 0.64, -0.24, -0.24, A);
+          P(0.26, 0.42, 0.28, s * 0.64, -0.6, -0.2, B);
+          P(0.22, 0.32, 0.24, s * 0.64, -0.84, -0.18, B);
+          this._markDetail(this._part(H, torus(hs * 0.11, hs * 0.03, 5, 8), m.accent, hs * 0.52, hs * 0.08, -hs * 0.2));
         }
-        fringe(0.94, 0.22, 0, 0.26, 0, A);
-        fringe(0.38, 0.3, -0.32, 0.18, 0.16, B);
-        fringe(0.38, 0.3, 0.32, 0.18, -0.16, B);
+        fringe(0.88, 0.2, 0, 0.24, 0, A);
+        fringe(0.36, 0.28, -0.3, 0.16, 0.14, B);
+        fringe(0.36, 0.28, 0.3, 0.16, -0.14, B);
         break;
       }
       case 'mShort': {
@@ -703,14 +701,13 @@ export class Avatar {
       }
       case 'shortLayered':
       default: {
-        crown(1.16, 0.38, 1.12);
-        P(1.12, 0.24, 1.06, 0, 0.5, 0.04, C);
-        back(0.78, -0.1, 1.08, 0.3, -0.44);
-        sides(0.7, -0.18, 0.19, 0.53, 0.96);
-        // Side-swept layered fringe with soft curves.
-        fringe(0.54, 0.26, -0.02, 0.28, 0.14, A);
-        fringe(0.36, 0.34, 0.32, 0.22, 0.34, B);
-        locks(0.54, -0.3, 0.16, 0.47, 0.24, 0.34, A);
+        crown(1.08, 0.32, 1.06);
+        P(1.04, 0.22, 1.0, 0, 0.46, 0.04, C);
+        back(0.72, -0.08, 1.02, 0.28, -0.4);
+        sides(0.66, -0.16, 0.18, 0.5, 0.92);
+        fringe(0.5, 0.22, -0.02, 0.26, 0.12, A);
+        fringe(0.34, 0.28, 0.3, 0.2, 0.3, B);
+        locks(0.5, -0.26, 0.15, 0.44, 0.22, 0.3, A);
         break;
       }
     }
