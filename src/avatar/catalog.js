@@ -32,7 +32,8 @@ export const HAIR_COLORS = [
   { id: 'hair_color_05', name: 'Honey Blonde', color: 0xc9a24a },
   { id: 'hair_color_06', name: 'Ash Blonde', color: 0xcdd0c8 },
   { id: 'hair_color_07', name: 'Fantasy Violet', color: 0x7a4a9a },
-  { id: 'hair_color_08', name: 'Crimson', color: 0xa83a3a },
+  { id: 'hair_color_08', name: 'Lavender', color: 0xc9c1ff },
+  { id: 'hair_color_09', name: 'Crimson', color: 0xa83a3a },
 ];
 
 export const TOP_COLORS = [
@@ -89,7 +90,7 @@ export const BODY_TYPES = {
       { key: 'arm_thickness', label: 'Arm thickness', min: 0.85, max: 1.2, default: 1.0, group: 'limbs' },
       { key: 'tattoo_opacity', label: 'Tattoo opacity', min: 0, max: 1, default: 0, group: 'surface', supported: false },
     ],
-    defaultAppearance: { skin_tone_id: 'skin_tone_02', hair_id: 'hair_f_short_brown', hair_color_id: 'hair_color_02', face_style_id: 'face_female_01' },
+    defaultAppearance: { skin_tone_id: 'skin_tone_02', hair_id: 'hair_f_short_brown', hair_color_id: 'hair_color_08', face_style_id: 'face_female_01' },
     defaultOutfit: { top_id: 'top_uniform_white', top_color_id: 'top_color_01', outerwear_id: 'outerwear_none', bottom_id: 'bottom_uniform_skirt', bottom_color_id: 'bottom_color_05', footwear_id: 'footwear_sneakers_01', shoe_color_id: 'shoe_color_02', glasses_id: 'glasses_none', glasses_color_id: 'glasses_color_01', headwear_id: 'headwear_none' },
   },
   male_base_v1: {
@@ -188,7 +189,7 @@ export const OUTFITS = [
     id: 'outfit_nurse_white',
     name: 'White & red uniform',
     body_type: 'female_base_v1',
-    appearance: { hair_id: 'hair_f_short_brown', hair_color_id: 'hair_color_02', skin_tone_id: 'skin_tone_02', face_style_id: 'face_female_01' },
+    appearance: { hair_id: 'hair_f_short_brown', hair_color_id: 'hair_color_08', skin_tone_id: 'skin_tone_02', face_style_id: 'face_female_01' },
     outfit: {
       top_id: 'top_uniform_white', top_color_id: 'top_color_01',
       outerwear_id: 'outerwear_none',

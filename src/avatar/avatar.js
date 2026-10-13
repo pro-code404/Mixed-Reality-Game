@@ -195,8 +195,8 @@ export class Avatar {
 
     m.skin.color.setHex(skin);
     m.hair.color.setHex(hair);
-    m.hairDark.color.setHex(shade(hair, 0.6));
-    m.hairLight.color.setHex(shade(hair, 1.28));
+    m.hairDark.color.setHex(shade(hair, 0.72));
+    m.hairLight.color.setHex(shade(hair, 1.18));
     m.brow.color.setHex(shade(hair, 0.5));
     m.mouth.color.setHex(isF ? 0xb5526e : 0x9c6b52);
     m.top.color.setHex(top);
