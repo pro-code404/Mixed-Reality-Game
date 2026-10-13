@@ -637,40 +637,45 @@ export class Avatar {
 
     switch (style) {
       case 'volBob': {
-        crown(1.2, 0.4, 1.16);
-        back(1.15, -0.14, 1.12, 0.34, -0.48);
-        sides(1.12, -0.24, 0.2, 0.55, 1.0);
-        // Rounded bob: extra width at the jaw line, then a shorter under-layer.
-        P(1.14, 0.5, 0.86, 0, -0.5, -0.16, B);
-        locks(0.72, -0.3, 0.18, 0.48, 0.26, 0.3, A);
-        // Asymmetrical fringe: a long sweep + a short side.
-        fringe(0.62, 0.15, -0.06, 0.26, 0.14, A);
-        fringe(0.34, 0.2, 0.28, 0.22, 0.3, B);
+        crown(1.2, 0.42, 1.16);
+        // Rounded bob crown with more lift at the front.
+        P(1.16, 0.26, 1.06, 0, 0.48, 0.06, C);
+        back(1.2, -0.18, 1.14, 0.36, -0.46);
+        sides(1.2, -0.26, 0.22, 0.56, 1.04);
+        // Curved under-layer at jaw to give a softer, wig-like fall.
+        P(1.16, 0.52, 0.9, 0, -0.46, -0.14, B);
+        locks(0.78, -0.32, 0.2, 0.49, 0.24, 0.32, A);
+        fringe(0.66, 0.22, -0.04, 0.28, 0.18, A);
+        fringe(0.38, 0.26, 0.3, 0.24, 0.28, B);
         break;
       }
       case 'longAsh': {
-        crown(1.16, 0.36, 1.12);
-        back(1.7, -0.55, 1.1, 0.32, -0.5);
-        P(0.98, 1.1, 0.28, 0, -1.0, -0.46, B); // long rear panel
-        sides(1.25, -0.35, 0.19, 0.54, 1.0);
-        locks(1.45, -0.72, 0.24, 0.45, 0.24, 0.26);
-        P(0.62, 0.36, 0.3, 0, -0.98, -0.5, A);   // lower back lock
-        fringe(0.5, 0.26, -0.05, 0.28, 0.12, C);
-        fringe(0.34, 0.36, 0.27, 0.2, 0.3, B);
+        crown(1.18, 0.38, 1.14);
+        P(1.14, 0.28, 1.08, 0, 0.5, 0.04, C);
+        back(1.8, -0.6, 1.14, 0.34, -0.48);
+        P(1.04, 1.18, 0.3, 0, -1.08, -0.44, B); // long rear panel
+        sides(1.32, -0.4, 0.22, 0.56, 1.04);
+        locks(1.56, -0.78, 0.26, 0.47, 0.26, 0.28);
+        P(0.68, 0.42, 0.32, 0, -1.06, -0.48, A);   // lower back lock
+        P(0.9, 0.32, 0.26, 0, -0.86, -0.5, B);     // curved mid-back
+        fringe(0.54, 0.3, -0.04, 0.3, 0.16, C);
+        fringe(0.38, 0.4, 0.3, 0.22, 0.34, B);
         break;
       }
       case 'twinTails': {
-        crown(1.14, 0.38, 1.1);
-        back(0.85, -0.05, 1.06, 0.3, -0.48);
-        sides(0.8, -0.14, 0.16, 0.53);
+        crown(1.16, 0.4, 1.12);
+        P(1.12, 0.24, 1.06, 0, 0.52, 0.04, C);
+        back(0.92, -0.08, 1.08, 0.32, -0.46);
+        sides(0.88, -0.18, 0.18, 0.54);
         for (const s of [-1, 1]) {
-          P(0.3, 0.72, 0.32, s * 0.66, -0.24, -0.28, A);
-          P(0.26, 0.4, 0.28, s * 0.66, -0.6, -0.24, B);
-          this._markDetail(this._part(H, torus(hs * 0.12, hs * 0.035, 5, 8), m.accent, hs * 0.54, hs * 0.12, -hs * 0.24));
+          P(0.32, 0.8, 0.34, s * 0.68, -0.26, -0.26, A);
+          P(0.28, 0.46, 0.3, s * 0.68, -0.66, -0.22, B);
+          P(0.24, 0.36, 0.26, s * 0.68, -0.9, -0.2, B);
+          this._markDetail(this._part(H, torus(hs * 0.12, hs * 0.035, 5, 8), m.accent, hs * 0.56, hs * 0.08, -hs * 0.22));
         }
-        fringe(0.9, 0.2, 0, 0.24, 0, A);
-        fringe(0.34, 0.28, -0.3, 0.16, 0.18, B);
-        fringe(0.34, 0.28, 0.3, 0.16, -0.18, B);
+        fringe(0.94, 0.22, 0, 0.26, 0, A);
+        fringe(0.38, 0.3, -0.32, 0.18, 0.16, B);
+        fringe(0.38, 0.3, 0.32, 0.18, -0.16, B);
         break;
       }
       case 'mShort': {
@@ -698,14 +703,14 @@ export class Avatar {
       }
       case 'shortLayered':
       default: {
-        crown(1.14, 0.36, 1.12);
-        back(0.72, -0.08, 1.06, 0.28, -0.46);
-        sides(0.64, -0.16, 0.17, 0.52, 0.94);
-        // Side-swept layered fringe.
-        fringe(0.5, 0.24, -0.02, 0.27, 0.12);
-        fringe(0.32, 0.32, 0.3, 0.2, 0.32, B);
-        // Face-framing locks (one per side, alternating tone).
-        locks(0.5, -0.28, 0.14, 0.46, 0.22, 0.33, A);
+        crown(1.16, 0.38, 1.12);
+        P(1.12, 0.24, 1.06, 0, 0.5, 0.04, C);
+        back(0.78, -0.1, 1.08, 0.3, -0.44);
+        sides(0.7, -0.18, 0.19, 0.53, 0.96);
+        // Side-swept layered fringe with soft curves.
+        fringe(0.54, 0.26, -0.02, 0.28, 0.14, A);
+        fringe(0.36, 0.34, 0.32, 0.22, 0.34, B);
+        locks(0.54, -0.3, 0.16, 0.47, 0.24, 0.34, A);
         break;
       }
     }
